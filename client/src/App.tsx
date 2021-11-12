@@ -11,9 +11,17 @@ function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   const sendMessageHandler = () => {
+    let sameAuth = false;
+    if (messages.length > 0) {
+      if (messages[messages.length - 1].msgAuthor === userName) {
+        sameAuth = true;
+      }
+    }
+
     const newMessage: ChatMessage = {
       msgAuthor: userName,
       msgContent: currMsg,
+      sameAuthor: sameAuth,
     };
     const newArr = messages.concat(newMessage);
     setMessages(newArr);
@@ -45,6 +53,17 @@ function App() {
           <Button text="Send Message" onClick={() => sendMessageHandler()} />
         </div>
       )}
+      <div className="flex flex-col w-1/2">
+        <InputField
+          placeholder="Enter Username"
+          value={userNameField}
+          getText={(text) => setUserNameField(text)}
+        />
+        <Button
+          text="Submit Username"
+          onClick={() => setUserName(userNameField)}
+        />
+      </div>
     </div>
   );
 }
