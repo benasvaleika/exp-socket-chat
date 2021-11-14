@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { ChatMessage } from "../types";
 import ChatMsg from "./ChatMsg";
 import { v4 as uuidv4 } from "uuid";
@@ -8,6 +8,16 @@ interface ChatWindowProps {
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ messages }) => {
+  const messagesEndRef = useRef<null | HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView();
+  };
+
   return (
     <div className={"border-2 h-2/3 mx-4 mt-4 overflow-y-auto flex flex-col"}>
       {messages.length === 0 ? (
@@ -25,6 +35,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages }) => {
           );
         })
       )}
+      <div ref={messagesEndRef} />
     </div>
   );
 };

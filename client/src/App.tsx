@@ -1,71 +1,17 @@
-import { useState } from "react";
-import Button from "./Components/Button";
-import ChatWindow from "./Components/ChatWindow";
-import InputField from "./Components/InputField";
-import { ChatMessage } from "./types";
+import ChatPage from "./Components/ChatPage";
 
-function App() {
-  const [currMsg, setCurrMsg] = useState("");
-  const [userNameField, setUserNameField] = useState("");
-  const [userName, setUserName] = useState<string | null>(null);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+const App = ({}) => {
+  const ws = new WebSocket("ws://192.168.3.11:4000");
 
-  const sendMessageHandler = () => {
-    let sameAuth = false;
-    if (messages.length > 0) {
-      if (messages[messages.length - 1].msgAuthor === userName) {
-        sameAuth = true;
-      }
-    }
-
-    const newMessage: ChatMessage = {
-      msgAuthor: userName,
-      msgContent: currMsg,
-      sameAuthor: sameAuth,
-    };
-    const newArr = messages.concat(newMessage);
-    setMessages(newArr);
-    setCurrMsg("");
-  };
+  ws.addEventListener("open", () => {
+    console.log("New Connection");
+  });
 
   return (
-    <div className={"h-screen"}>
-      <ChatWindow messages={messages} />
-      {!userName ? (
-        <div className="flex flex-col w-1/2">
-          <InputField
-            placeholder="Enter Username"
-            value={userNameField}
-            getText={(text) => setUserNameField(text)}
-          />
-          <Button
-            text="Submit Username"
-            onClick={() => setUserName(userNameField)}
-          />
-        </div>
-      ) : (
-        <div className="flex flex-col w-1/2">
-          <InputField
-            placeholder="Enter Message"
-            value={currMsg}
-            getText={(text) => setCurrMsg(text)}
-          />
-          <Button text="Send Message" onClick={() => sendMessageHandler()} />
-        </div>
-      )}
-      <div className="flex flex-col w-1/2">
-        <InputField
-          placeholder="Enter Username"
-          value={userNameField}
-          getText={(text) => setUserNameField(text)}
-        />
-        <Button
-          text="Submit Username"
-          onClick={() => setUserName(userNameField)}
-        />
-      </div>
+    <div>
+      <ChatPage />
     </div>
   );
-}
+};
 
 export default App;
