@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import http from "http";
 import WebSocket from "ws";
 import { config as dotenv } from "dotenv";
+import { buffer } from "stream/consumers";
 
 dotenv();
 
@@ -14,8 +15,10 @@ wss.on("connection", function connection(ws) {
   ws.send("Welcome New clien!");
 
   ws.on("message", function incoming(message) {
-    console.log("received:", message);
-    ws.send("got message " + message);
+    const newMessage = JSON.parse(message.toString());
+
+    console.log(newMessage);
+    ws.send("got message ");
   });
 });
 

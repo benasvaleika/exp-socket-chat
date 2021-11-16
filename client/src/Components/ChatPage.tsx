@@ -18,9 +18,18 @@ function ChatPage() {
     ws.current.addEventListener("open", () => {
       console.log("New Connection");
     });
+
+    const wsCurrent = ws.current;
+
+    return () => {
+      wsCurrent.close();
+    };
   }, []);
 
-  const sendMessageHandler = () => {
+  if (ws.current) {
+  }
+
+  const sendMessageHandler = async () => {
     let sameAuth = false;
     if (messages.length > 0) {
       if (messages[messages.length - 1].msgAuthor === userName) {
@@ -35,7 +44,8 @@ function ChatPage() {
     };
 
     if (ws.current) {
-      ws.current.send("message");
+      ws.current.send(JSON.stringify(newMessage));
+      console.log(JSON.stringify(newMessage));
     }
 
     const newArr = messages.concat(newMessage);
