@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import ChatWindow from "./ChatWindow";
 import InputField from "./InputField";
@@ -9,6 +9,16 @@ function ChatPage() {
   const [userNameField, setUserNameField] = useState("");
   const [userName, setUserName] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  // WebSocket reference
+  const ws: any = useRef(null);
+
+  useEffect(() => {
+    ws.current = new WebSocket("ws://192.168.3.11:4000");
+    ws.current.addEventListener("open", () => {
+      console.log("New Connection");
+    });
+  }, []);
 
   const sendMessageHandler = () => {
     let sameAuth = false;
@@ -23,6 +33,11 @@ function ChatPage() {
       msgContent: currMsg,
       sameAuthor: sameAuth,
     };
+
+    if (ws.current) {
+      ws.current.send("message");
+    }
+
     const newArr = messages.concat(newMessage);
     setMessages(newArr);
     setCurrMsg("");
