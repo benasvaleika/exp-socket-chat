@@ -27,6 +27,11 @@ function ChatPage() {
   }, []);
 
   if (ws.current) {
+    ws.current.onmessage = (data: any) => {
+      console.log(JSON.parse(data.data.toString()));
+      const wsMessage = JSON.parse(data.data.toString());
+      setMessages(messages.concat(wsMessage));
+    };
   }
 
   const sendMessageHandler = async () => {
@@ -45,11 +50,9 @@ function ChatPage() {
 
     if (ws.current) {
       ws.current.send(JSON.stringify(newMessage));
-      console.log(JSON.stringify(newMessage));
     }
 
-    const newArr = messages.concat(newMessage);
-    setMessages(newArr);
+    setMessages(messages.concat(newMessage));
     setCurrMsg("");
   };
 

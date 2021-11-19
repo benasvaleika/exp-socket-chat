@@ -17,8 +17,13 @@ wss.on("connection", function connection(ws) {
   ws.on("message", function incoming(message) {
     const newMessage = JSON.parse(message.toString());
 
+    wss.clients.forEach(function each(client) {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(newMessage));
+      }
+    });
+
     console.log(newMessage);
-    ws.send("got message ");
   });
 });
 
