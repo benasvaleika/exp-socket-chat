@@ -1,3 +1,3 @@
 # exp-socket-play
 
-A real-time chat built to better understand websockets
+A primitive real-time chat built to better understand websockets
